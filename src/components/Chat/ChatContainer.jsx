@@ -11,11 +11,15 @@ const Container = styled.div`
   background-color: white;
 `;
 
-const ChatContainer = ({ currentRoom, messages = [], userId, onSendMessage }) => {  // props 추가 및 기본값 설정
+// ChatContainer.jsx
+const ChatContainer = ({ currentRoom, messages = [], userId, onSendMessage }) => {
     return (
         <Container>
-            <ChatHeader currentRoom={currentRoom} />
-            <MessageList messages={messages} currentUserId={userId} />
+            <ChatHeader currentRoom={currentRoom} userId={userId} />
+            <MessageList 
+                messages={messages} 
+                currentUserId={Number(userId)}
+            />
             <MessageInput onSendMessage={onSendMessage} />
         </Container>
     );

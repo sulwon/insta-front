@@ -1,10 +1,18 @@
-const BASE_URL = '/api/dm';  // proxy 설정으로 인해 전체 URL 불필요
+// chatService.js
+// const BASE_URL = '/api/dm';  // 기존 코드 주석 처리
+const BASE_URL = 'http://192.168.10.45:8080/api/dm';  // 실제 서버 주소로 변경
 
 export const chatService = {
     // 채팅방 목록 조회
     async getRooms(userId) {
         try {
-            const response = await fetch(`${BASE_URL}/rooms?userId=${userId}`);
+            const response = await fetch(`${BASE_URL}/rooms?userId=${userId}`, {
+                // CORS 관련 설정 추가
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             if (!response.ok) throw new Error('Failed to fetch rooms');
             return await response.json();
         } catch (error) {
@@ -21,6 +29,7 @@ export const chatService = {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',  // CORS 설정 추가
                 body: JSON.stringify({ userId, otherUserId })
             });
             if (!response.ok) throw new Error('Failed to create room');
@@ -35,7 +44,8 @@ export const chatService = {
     async leaveRoom(roomId, userId) {
         try {
             const response = await fetch(`${BASE_URL}/rooms/${roomId}?userId=${userId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                credentials: 'include'  // CORS 설정 추가
             });
             if (!response.ok) throw new Error('Failed to leave room');
             return true;
@@ -45,3 +55,14 @@ export const chatService = {
         }
     }
 };
+// 테스트 코드
+if (typeof module !== 'undefined' && require.main === module) {
+    (async () => {
+        try {
+            const rooms = await chatService.getRooms(1);
+            console.log('Loaded rooms:', rooms);
+        } catch (error) {
+            console.error('Error in test:', error);
+        }
+    })();
+}

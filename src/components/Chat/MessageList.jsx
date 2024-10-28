@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -28,7 +28,17 @@ const SystemMessage = styled.div`
   margin: 10px 0;
 `;
 
-const MessageList = ({ messages, currentUserId }) => {
+const MessageList = ({ messages = [], currentUserId }) => {
+    const messagesEndRef = useRef(null);  // 스크롤할 요소의 참조 생성
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();  // 메시지 목록이 업데이트될 때마다 스크롤
+    }, [messages]);
+
     return (
         <Container>
             {messages.map((message, index) => (
@@ -45,6 +55,8 @@ const MessageList = ({ messages, currentUserId }) => {
                     </SystemMessage>
                 )
             ))}
+            {/* 스크롤할 위치를 지정하는 더미 요소 */}
+            <div ref={messagesEndRef} />
         </Container>
     );
 };

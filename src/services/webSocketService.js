@@ -1,3 +1,4 @@
+// webSocketService.js
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 
@@ -8,9 +9,11 @@ class WebSocketService {
     }
 
     connect(userId, onConnected, onError) {
-        const socket = new SockJS('http://localhost:8080/ws');  // 백엔드 WebSocket 엔드포인트
+        // const socket = new SockJS('http://localhost:8080/ws');
+        const socket = new SockJS('http://192.168.10.45:8080/ws');  // IP 주소로 변경
         this.stompClient = Stomp.over(socket);
-        this.stompClient.debug = null;
+        
+        this.stompClient.debug = () => {};
 
         this.stompClient.connect(
             {

@@ -1,3 +1,4 @@
+// ChatHeader.jsx
 import React from 'react';
 import styled from 'styled-components';
 
@@ -22,12 +23,22 @@ const RoomName = styled.div`
   font-weight: 600;
 `;
 
-const ChatHeader = ({ currentRoom }) => {
+const ChatHeader = ({ currentRoom, userId }) => {
+    const getOtherUserName = () => {
+        if (currentRoom && currentRoom.participants) {
+            const otherUser = currentRoom.participants.find(
+                participant => participant.id !== Number(userId)
+            );
+            return otherUser ? `user${otherUser.id}` : '';
+        }
+        return '';
+    };
+
     return (
         <Header>
             <ProfileImage />
             <RoomName>
-                {currentRoom ? currentRoom : '메시지 대상 user'}
+                {getOtherUserName()}
             </RoomName>
         </Header>
     );

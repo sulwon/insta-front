@@ -34,14 +34,17 @@ const RoomName = styled.div`
   margin-bottom: 4px;
 `;
 
-function RoomItem({ room, currentUserId }) {
+// RoomItem.jsx
+function RoomItem({ room, currentUserId, onClick }) {  // onClick prop 추가
   const otherParticipants = room.participants
-    .filter(p => p.id != currentUserId)
-    .map(p => p.username)
-    .join(', ');
+    ? room.participants
+        .filter(p => p.id !== Number(currentUserId))  // currentUserId를 숫자로 변환
+        .map(p => p.username)
+        .join(', ')
+    : `Room ${room.id}`;
 
   return (
-    <RoomItemContainer>
+    <RoomItemContainer onClick={onClick}>  {/* onClick 이벤트 추가 */}
       <ProfileImage />
       <RoomInfo>
         <RoomName>{otherParticipants || `Room ${room.id}`}</RoomName>

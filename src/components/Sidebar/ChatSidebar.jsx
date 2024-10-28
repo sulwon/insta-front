@@ -41,8 +41,7 @@ const NewMessageButton = styled.img`
   cursor: pointer;
 `;
 
-function ChatSidebar() {
-    const [userId, setUserId] = useState('');
+function ChatSidebar({ userId, onUserIdSubmit, onRoomSelect }) {
     const [rooms, setRooms] = useState([]);
 
     const loadRooms = async () => {
@@ -72,7 +71,7 @@ function ChatSidebar() {
             });
 
             if (response.ok) {
-                loadRooms();
+                loadRooms();  // 새 채팅방 생성 후 목록 새로고침
             }
         } catch (error) {
             console.error('Error creating room:', error);
@@ -92,14 +91,13 @@ function ChatSidebar() {
                     <input
                         type="text"
                         value={userId}
-                        onChange={(e) => setUserId(e.target.value)}
+                        onChange={(e) => onUserIdSubmit(e.target.value)}
                         placeholder="Enter User ID"
                     />
-                    <button onClick={loadRooms}>Load</button>
                 </Username>
                 <NewMessageButton src={edit} alt="New Message" onClick={createRoom} />
             </SidebarHeader>
-            <RoomList rooms={rooms} currentUserId={userId} />
+            <RoomList rooms={rooms} currentUserId={userId} onRoomSelect={onRoomSelect} />
         </SidebarContainer>
     );
 }

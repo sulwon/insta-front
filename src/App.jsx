@@ -11,8 +11,12 @@ const MainContainer = styled.div`
   height: 100vh;
 `;
 
+
+// App.jsx
 function App() {
   const [userId, setUserId] = useState('');
+  const [selectedRoom, setSelectedRoom] = useState(null);  // 선택된 방 정보를 저장할 상태 추가
+  
   const {
     isConnected,
     currentRoom,
@@ -23,17 +27,30 @@ function App() {
     sendMessage
   } = useWebSocket(userId);
 
+  const handleRoomSelect = async (roomId) => {
+    try {
+      const response = await fetch(`/api/dm/rooms/${roomId}?userId=${userId}`);
+      if (response.ok) {
+        const roomData = await response.json();
+        setSelectedRoom(roomData);
+        joinRoom(roomId);
+      }
+    } catch (error) {
+      console.error('Error fetching room details:', error);
+    }
+  };
+
   return (
     <MainContainer>
       <NavSidebar />
       <ChatSidebar 
         userId={userId}
         onUserIdSubmit={setUserId}
-        onRoomSelect={joinRoom}
-        currentRoom={currentRoom}
+        onRoomSelect={handleRoomSelect}
+        currentRoom={selectedRoom}
       />
       <ChatContainer
-        currentRoom={currentRoom}
+        currentRoom={selectedRoom}
         messages={messages || []}
         userId={userId}
         onSendMessage={sendMessage}

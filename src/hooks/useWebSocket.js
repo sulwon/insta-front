@@ -58,18 +58,18 @@ const useWebSocket = (userId) => {
     // 메시지 전송
     const sendMessage = useCallback((content) => {
         if (!currentRoom || !userId) return;
-
+    
         const message = {
             type: 'CHAT',
             roomId: currentRoom,
-            senderId: userId,
+            senderId: Number(userId),  // userId를 숫자로 확실히 변환
             content,
             timestamp: Date.now()
         };
-
+    
         webSocketService.sendMessage(currentRoom, message);
     }, [currentRoom, userId]);
-
+    
     return {
         isConnected,
         currentRoom,
